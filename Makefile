@@ -48,9 +48,8 @@ gcc:
 	@touch gcc
 
 libc.update:
-	-@rm newlib
-	-@rm gcc
-	@$(MAKE) toolchain
+	@cd build-newlib && $(MAKE) all
+	@cd build-newlib && sudo $(MAKE) install
 
 toolchain:
 	@echo "BTDK sucessfully compiled"
