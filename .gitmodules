@@ -1,9 +1,9 @@
 [submodule "sources/binutils"]
 	path = sources/binutils
-	url = git@gitlab.riegl-gmbh:bitthunder-toolchain/binutils.git
+	url = git@github.com:bitthunder-toolchain/binutils.git
 [submodule "sources/gcc"]
 	path = sources/gcc
-	url = git@gitlab.riegl-gmbh:bitthunder-toolchain/gcc.git
+	url = git@github.com:bitthunder-toolchain/gcc.git
 [submodule "sources/newlib"]
 	path = sources/newlib
-	url = git@gitlab.riegl-gmbh:bitthunder-toolchain/newlib.git
+	url = git@github.com:bitthunder-toolchain/newlib.git
