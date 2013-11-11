@@ -54,4 +54,4 @@ toolchain:
 	@echo "BTDK sucessfully compiled"
 
 ubuntu.prerequisites:
-	@sudo apt-get install ${packages}
+	@sudo apt-get install ${PACKAGES}
