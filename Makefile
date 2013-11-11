@@ -9,6 +9,8 @@ gcc_pre: binutils
 newlib: gcc_pre
 gcc: newlib
 
+include packages.mk
+
 binutils:
 	@rm -rf build-binutils
 	@mkdir build-binutils
@@ -39,6 +41,7 @@ newlib:
 gcc:
 	@cd build-gcc && $(MAKE)
 	@cd build-gcc && sudo $(MAKE) install
+	@touch gcc
 
 libc.update:
 	@rm newlib
@@ -47,3 +50,6 @@ libc.update:
 
 toolchain:
 	@echo "BTDK sucessfully compiled"
+
+ubuntu.prerequisites:
+	@sudo apt-get install ${packages}
