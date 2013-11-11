@@ -36,7 +36,7 @@ gcc_pre:
 newlib:
 	@rm -rf build-newlib
 	@mkdir build-newlib
-	@cd build-newlib && ../sources/newlib/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --with-pkgversion=${PKGVERSION}
+	@cd build-newlib && ../sources/newlib/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --with-pkgversion=${PKGVERSION} CFLAGS="-DMALLOC_PROVIDED"
 	@cd build-newlib && sed -i "s|RANLIB_FOR_TARGET=${TARGET}-ranlib|RANLIB_FOR_TARGET=${PREFIX}/bin/${TARGET}-ranlib|g" Makefile
 	@cd build-newlib && $(MAKE) all
 	@cd build-newlib && sudo $(MAKE) install
