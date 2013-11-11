@@ -1,6 +1,8 @@
 TARGET=arm-eabi-bt
 PREFIX=/opt/btdk
 
+export PATH := $(PATH):${PREFIX}/bin/
+
 # Simple dependency tree
 all: toolchain
 
