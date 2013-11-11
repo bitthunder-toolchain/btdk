@@ -1,1 +1,1 @@
-PACKAGES="build-essential makeinfo bison flex libmpfr-dev libmpc-dev"
+PACKAGES="build-essential texinfo bison flex libmpfr-dev libmpc-dev"
