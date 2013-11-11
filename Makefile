@@ -46,8 +46,8 @@ gcc:
 	@touch gcc
 
 libc.update:
-	@rm newlib
-	@rm gcc
+	-@rm newlib
+	-@rm gcc
 	@$(MAKE) toolchain
 
 toolchain:
