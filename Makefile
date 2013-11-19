@@ -26,7 +26,7 @@ binutils:
 gcc_pre:
 	@rm -rf build-gcc
 	@mkdir build-gcc
-	@cd build-gcc && ../sources/gcc/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-languages="c" --with-newlib --without-headers --disable-shared --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION}
+	@cd build-gcc && ../sources/gcc/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION}
 	@cd build-gcc && $(MAKE) all-gcc
 	@cd build-gcc && sudo $(MAKE) install-gcc
 	@cd build-gcc && $(MAKE) all-target-libgcc
@@ -36,23 +36,31 @@ gcc_pre:
 newlib:
 	@rm -rf build-newlib
 	@mkdir build-newlib
-	@cd build-newlib && ../sources/newlib/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --with-pkgversion=${PKGVERSION}
+	@cd build-newlib && ../sources/newlib/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --disable-libssp --with-pkgversion=${PKGVERSION}
 	@cd build-newlib && sed -i "s|RANLIB_FOR_TARGET=${TARGET}-ranlib|RANLIB_FOR_TARGET=${PREFIX}/bin/${TARGET}-ranlib|g" Makefile
 	@cd build-newlib && $(MAKE) all
 	@cd build-newlib && sudo $(MAKE) install
 	@touch newlib
 
 gcc:
-	@cd build-gcc && $(MAKE)
+	@cd build-gcc && ../sources/gcc/configure --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION}
+	@cd build-gcc && $(MAKE) all
 	@cd build-gcc && sudo $(MAKE) install
 	@touch gcc
 
 libc.update:
 	@cd build-newlib && $(MAKE) all
 	@cd build-newlib && sudo $(MAKE) install
+	@sudo bash install-libc.sh $(PREFIX) $(TARGET)
+
+libc.install: newlib
+	@sudo bash install-libc.sh $(PREFIX) $(TARGET)
 
 toolchain:
 	@echo "BTDK sucessfully compiled"
 
 ubuntu.prerequisites:
 	@sudo apt-get install ${PACKAGES}
+
+clean:
+	@rm binutils gcc_pre newlib gcc
