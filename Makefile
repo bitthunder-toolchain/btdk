@@ -91,4 +91,6 @@ ubuntu.prerequisites:
 	@sudo apt-get install ${PACKAGES}
 
 clean:
-	@rm binutils gcc_pre newlib gcc
+	@-rm binutils gcc_pre newlib gcc
+	@-rm -rf libgmp libmpfr libmpc
+	@-rm -rf build-*
