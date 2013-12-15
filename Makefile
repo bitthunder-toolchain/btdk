@@ -1,6 +1,6 @@
 TARGET=arm-eabi-bt
-PREFIX=/opt/btdk
-#HOST=i686-w64-mingw32
+PREFIX=/opt/btdk-win32
+HOST=i686-w64-mingw32
 
 export PATH := $(PATH):${PREFIX}/bin/
 
@@ -31,15 +31,15 @@ binutils:
 libmpfr:
 	@rm -rf build-libmpfr
 	@mkdir build-libmpfr
-	@cd build-libmpfr && ../sources/libmpfr/configure --prefix=$(shell pwd)/libmpfr --with-gmp=$(ROOT)/libgmp --disable-shared --enable-static
+	@cd build-libmpfr && ../sources/libmpfr/configure --build=${HOST} --host=${HOST} --prefix=$(shell pwd)/libmpfr --with-gmp=$(ROOT)/libgmp --disable-shared --enable-static
 	@cd build-libmpfr && $(MAKE)
-	@cd build-libmpfr && $(MAKE) check
+	#@cd build-libmpfr && $(MAKE) check
 	@cd build-libmpfr && $(MAKE) install
 
 libgmp:
 	@rm -rf build-libgmp
 	@mkdir build-libgmp
-	@cd build-libgmp && ../sources/libgmp/configure --prefix=$(shell pwd)/libgmp --disable-shared --enable-static
+	@cd build-libgmp && ../sources/libgmp/configure --build=${HOST} --host=${HOST} --prefix=$(shell pwd)/libgmp --disable-shared --enable-static
 	@cd build-libgmp && $(MAKE)
 	#@cd build-libgmp && $(MAKE) check
 	@cd build-libgmp && $(MAKE) install
@@ -47,14 +47,14 @@ libgmp:
 libmpc:
 	@rm -rf build-libmpc
 	@mkdir build-libmpc
-	@cd build-libmpc && ../sources/libmpc/configure --prefix=$(shell pwd)/libmpc --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --disable-shared --enable-static 
+	@cd build-libmpc && ../sources/libmpc/configure --build=${HOST} --host=${HOST} --prefix=$(shell pwd)/libmpc --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --disable-shared --enable-static 
 	@cd build-libmpc && $(MAKE)
 	@cd build-libmpc && $(MAKE) install
 
 gcc_pre:
 	@rm -rf build-gcc
 	@mkdir build-gcc
-	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
+	@cd build-gcc && ../sources/gcc/configure --build=${HOST} --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
 	@cd build-gcc && $(MAKE) all-gcc
 	@cd build-gcc && sudo $(MAKE) install-gcc
 	@cd build-gcc && $(MAKE) all-target-libgcc
