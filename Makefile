@@ -16,7 +16,7 @@ gcc: newlib
 
 include packages.mk
 
-PKGVERSION="BitThunder BTDK v1.0.0"
+PKGVERSION="BitThunder BTDK ($(shell git describe))"
 
 ROOT=$(shell pwd)
 
