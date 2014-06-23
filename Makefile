@@ -1,6 +1,7 @@
 TARGET=arm-eabi-bt
 PREFIX=/opt/btdk
 #HOST=i686-w64-mingw32
+NEWLIB_OPTIONS=--enable-target-optspace --enable-newlib-hw-fp
 
 export PATH := $(PATH):${PREFIX}/bin/
 
@@ -64,7 +65,7 @@ gcc_pre:
 newlib:
 	@rm -rf build-newlib
 	@mkdir build-newlib
-	@cd build-newlib && ../sources/newlib/configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --disable-libssp --with-pkgversion=${PKGVERSION}
+	@cd build-newlib && ../sources/newlib/configure --host=${HOST} --target=${TARGET} --prefix=${PREFIX} ${NEWLIB_OPTIONS} --enable-interwork --enable-multilib --with-gnu-as --with-gnu-ls --disable-libgloss --disable-libssp --with-pkgversion=${PKGVERSION}
 	@cd build-newlib && sed -i "s|RANLIB_FOR_TARGET=${TARGET}-ranlib|RANLIB_FOR_TARGET=${PREFIX}/bin/${TARGET}-ranlib|g" Makefile
 	@cd build-newlib && $(MAKE) all
 	@cd build-newlib && sudo $(MAKE) install
