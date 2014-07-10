@@ -1,5 +1,5 @@
 TARGET=arm-eabi-bt
-PREFIX=/opt/btdk
+PREFIX=$(shell pwd)/output
 #HOST=i686-pc-mingw32
 BUILD=
 NEWLIB_OPTIONS=--enable-target-optspace --enable-newlib-hw-fp
@@ -28,7 +28,7 @@ binutils:
 	@mkdir build-binutils
 	@cd build-binutils && ../sources/binutils/configure --host=${HOST} --build=${BUILD} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-target-optspace --with-float=soft --disable-werror --with-pkgversion=${PKGVERSION}
 	@cd build-binutils && $(MAKE)
-	@cd build-binutils && sudo make install
+	@cd build-binutils && $(MAKE) install
 	@touch binutils
 
 libmpfr:
@@ -60,11 +60,10 @@ gcc_pre:
 	@sed -i 's:__BTDK_VERSION__:\"${__BTDK_VERSION__}\":g' sources/gcc/gcc/config/arm/bt-eabi.h sources/gcc/gcc/config/arm/bitthunder-eabi.h
 	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --build=${BUILD} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
 	@cd build-gcc && $(MAKE) all-gcc
-	@cd build-gcc && sudo $(MAKE) install-gcc
+	@cd build-gcc && $(MAKE) install-gcc
 	@cd build-gcc && $(MAKE) all-target-libgcc
-	@cd build-gcc && sudo $(MAKE) install-target-libgcc
+	@cd build-gcc && $(MAKE) install-target-libgcc
 	@touch gcc_pre
-	@cd sources/gcc && git checkout gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 
 newlib:
 	@rm -rf build-newlib
@@ -74,22 +73,23 @@ newlib:
 	@cd build-newlib && $(MAKE) all
 
 newlib.install:
-	@cd build-newlib && sudo $(MAKE) install
+	@cd build-newlib && $(MAKE) install
 	@touch newlib
 
 gcc:
 	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --target=${TARGET} --build=${BUILD} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
 	@cd build-gcc && $(MAKE) all
-	@cd build-gcc && sudo $(MAKE) install
+	@cd build-gcc && $(MAKE) install
 	@touch gcc
+	@cd sources/gcc && git checkout gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 
 libc.update:
 	@cd build-newlib && $(MAKE) all
-	@cd build-newlib && sudo $(MAKE) install
-	@sudo bash install-libc.sh $(PREFIX) $(TARGET)
+	@cd build-newlib && $(MAKE) install
+	@bash install-libc.sh $(PREFIX) $(TARGET)
 
 libc.install: newlib
-	@sudo bash install-libc.sh $(PREFIX) $(TARGET)
+	@bash install-libc.sh $(PREFIX) $(TARGET)
 
 toolchain:
 	@echo "BTDK sucessfully compiled"
