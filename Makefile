@@ -60,7 +60,7 @@ gcc_pre:
 	@mkdir build-gcc
 	@cd sources/gcc && git update-index --assume-unchanged gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 	@sed -i 's:__BTDK_VERSION__:\"${__BTDK_VERSION__}\":g' sources/gcc/gcc/config/arm/bt-eabi.h sources/gcc/gcc/config/arm/bitthunder-eabi.h
-	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --build=${BUILD} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
+	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --build=${BUILD} --target=${TARGET} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --without-headers --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc --with-system-zlib
 	@cd build-gcc && $(MAKE) all-gcc
 	@cd build-gcc && $(MAKE) install-gcc
 	@cd build-gcc && $(MAKE) all-target-libgcc
@@ -79,7 +79,7 @@ newlib.install:
 	@touch newlib
 
 gcc:
-	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --target=${TARGET} --build=${BUILD} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc
+	@cd build-gcc && ../sources/gcc/configure --host=${HOST} --target=${TARGET} --build=${BUILD} --prefix=${PREFIX} --enable-interwork --enable-multilib --enable-languages="c" --with-newlib --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-pkgversion=${PKGVERSION} --with-gmp=$(ROOT)/libgmp --with-mpfr=$(ROOT)/libmpfr --with-mpc=$(ROOT)/libmpc --with-system-zlib
 	@cd build-gcc && $(MAKE) all
 	@cd build-gcc && $(MAKE) install
 	@touch gcc
