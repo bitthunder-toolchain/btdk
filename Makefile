@@ -53,6 +53,10 @@ libgcc:
 newlib:
 	TARGET=$(TARGET) HOST=$(HOST) BUILD=$(BUILD) $(MAKE) $(PREFIX)/newlib
 
+.PHONY: newlib.install
+newlib.install:
+	TARGET=$(TARGET) HOST=$(HOST) BUILD=$(BUILD) $(MAKE) $(PREFIX)/newlib.install
+
 #
 #	Top-level dependencies
 #
