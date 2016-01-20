@@ -1,6 +1,6 @@
 override TARGET?=arm-eabi-bt
 override HOST?=$(shell gcc -dumpmachine)
-VERSION:=$(shell git describe --dirty)
+VERSION:=$(shell git describe)
 PREFIX=$(shell pwd)/output/${VERSION}/${TARGET}/${HOST}/
 ifndef HOST
 BUILD:=$(shell gcc -dumpmachine)
@@ -148,14 +148,14 @@ $(PREFIX)/libgcc_pre:
 $(PREFIX)/newlib:
 	@rm -rf $(PREFIX)/build/newlib
 	@mkdir $(PREFIX)/build/newlib
-	cd $(PREFIX)/build/newlib && CFLAGS=-DBTDK__VERSION $(BASE)/sources/newlib/configure --target=${TARGET} --prefix="" ${NEWLIB_OPTIONS} --with-pkgversion=${PKGVERSION}
+	cd $(PREFIX)/build/newlib && CFLAGS=-DBTDK__VERSION $(BASE)/sources/newlib/configure --target=${TARGET} --prefix="${PREFIX}/output" ${NEWLIB_OPTIONS} --with-pkgversion=${PKGVERSION}
 	#@cd $(PREFIX)/build/newlib && sed -ibak "s|RANLIB_FOR_TARGET=${TARGET}-ranlib|RANLIB_FOR_TARGET=${PREFIX}/output/bin/${TARGET}-ranlib|g" Makefile
 	@cd $(PREFIX)/build/newlib && $(MAKE) all
-	cd $(PREFIX)/build/newlib && DESTDIR=$(PREFIX)/output $(MAKE) install
+	cd $(PREFIX)/build/newlib $(MAKE) install
 	@touch $(PREFIX)/newlib
 
 $(PREFIX)/newlib.install:
-	@cd $(PREFIX)/build/newlib && DESTDIR=$(PREFIX)/output $(MAKE) install
+	@cd $(PREFIX)/build/newlib && $(MAKE) install
 	@touch $(PREFIX)/newlib.install
 
 $(PREFIX)/gcc:
