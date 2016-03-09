@@ -1,0 +1,34 @@
+{
+	"targets": {
+		"x86_64-linux-gnu": {
+			"gcc_bootstrap_config": "--enable-languages=c,c++ --disable-multilib --disable-bootstrap --with-system-zlib",
+			"hosts": {
+				"x86_64-linux": {},
+				"i686-pc-mingw32": {}
+			}
+		},
+		"i686-pc-mingw32": {
+                        "gcc_config": "--enable-languages=c,c++ --disable-multilib --disable-bootstrap --with-system-zlib",
+                        "hosts": {                                
+                                "i686-pc-mingw32": {}
+
+                        }
+                },
+		"arm-linux-gnueabihf": {
+                        "gcc_config": "--enable-languages=c,c++ --disable-multilib --disable-bootstrap --with-system-zlib",
+                        "hosts": {
+                                "arm-linux-gnueabihf": {}
+                        }
+                },
+		"arm-none-eabi": {
+			"gcc_bootstrap_config": "-disable-shared --enable-interwork --enable-multilib --enable-languages=c,c++ --without-headers --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-system-zlib",
+			"gcc_config": "--enable-interwork --enable-multilib --enable-languages=c,c++ --with-newlib --disable-shared --disable-libssp --with-gnu-as --with-gnu-ld --disable-nls --with-system-zlib --disable-hosted-libstdcxx",
+			"hosts": {
+				"x86_64-linux": {},
+				"i686-pc-mingw32": {},
+				"arm-linux-gnueabihf": {}
+			}
+		}
+	}
+}
+

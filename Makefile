@@ -1,11 +1,15 @@
 override TARGET?=arm-eabi-bt
 override HOST?=$(shell gcc -dumpmachine)
+override BUILD?=$(shell ${HOST}-gcc -dumpmachine)
 VERSION:=$(shell git describe)
 PREFIX=$(shell pwd)/output/${VERSION}/${TARGET}/${HOST}/
+
+ifndef BUILD
 ifndef HOST
 BUILD:=$(shell gcc -dumpmachine)
 else
 BUILD:=$(shell ${HOST}-gcc -dumpmachine)
+endif
 endif
 
 BASE:=$(shell readlink -f $(dir $(lastword $(MAKEFILE_LIST))))
@@ -130,8 +134,11 @@ $(PREFIX)/libmpc:
 $(PREFIX)/gcc_configure:
 	@rm -rf $(PREFIX)/build/gcc
 	@mkdir $(PREFIX)/build/gcc
+	@echo $(TARGET) $(HOST)
+ifeq ($(TARGET),arm-eabi-bt)
 	@cd sources/gcc && git update-index --assume-unchanged gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 	@sed -ibak 's:__BTDK_VERSION__:\"${__BTDK_VERSION__}\":g' sources/gcc/gcc/config/arm/bt-eabi.h sources/gcc/gcc/config/arm/bitthunder-eabi.h
+endif
 	@cd $(PREFIX)/build/gcc && $(BASE)/sources/gcc/configure --host=${HOST} --build=${BUILD} --target=${TARGET} --prefix=${PREFIX}/output --with-pkgversion=${PKGVERSION} --with-gmp=${PREFIX}/output --with-mpfr=${PREFIX}/output --with-mpc=${PREFIX}/output ${GCC_BASE_CONFIG}
 	@touch $(PREFIX)/gcc_configure
 
@@ -159,12 +166,16 @@ $(PREFIX)/newlib.install:
 	@touch $(PREFIX)/newlib.install
 
 $(PREFIX)/gcc:
+ifneq (${TARGET},${HOST})
 	@cd $(PREFIX)/build/gcc && $(BASE)/sources/gcc/configure --host=${HOST} --target=${TARGET} --build=${BUILD} --prefix=${PREFIX}/output --with-pkgversion=${PKGVERSION} --with-gmp=${PREFIX}/output --with-mpfr=${PREFIX}/output --with-mpc=${PREFIX}/output ${GCC_CONFIG}
+endif
 	@cd $(PREFIX)/build/gcc && $(MAKE) all
 	@cd $(PREFIX)/build/gcc && $(MAKE) install
 	@touch $(PREFIX)/gcc
+ifeq ($(TARGET),arm-eabi-bt)
 	@cd $(BASE)/sources/gcc && git update-index --no-assume-unchanged gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 	@cd $(BASE)/sources/gcc && git checkout gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
+endif
 
 .PHONY: libc.update
 libc.update:
@@ -192,5 +203,7 @@ clean:
 	@-rm -rf build-*
 
 done:
+ifeq ($(TARGET),arm-eabi-bt)
 	@cd sources/gcc && git update-index --no-assume-unchanged gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
 	@cd sources/gcc && git checkout gcc/config/arm/bt-eabi.h gcc/config/arm/bitthunder-eabi.h
+endif

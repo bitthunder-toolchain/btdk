@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TARGETS="arm-eabi-bt"
-HOSTS="x86_64-linux-gnu i686-pc-mingw32"
+TARGETS="x86_64-linux-gnu"
+HOSTS="x86_64-linux-gnu"
 for T in $TARGETS
 do
 	echo "* Building toolchains for: $T"
