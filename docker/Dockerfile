@@ -11,8 +11,6 @@ RUN git clone https://github.com/mxe/mxe.git
 
 RUN cd mxe && make gcc -j32
 
-RUN apt-get install -y python3 build-essential texinfo bison flex libgmp-dev libmpfr-dev libmpc-dev libncurses5-dev zlib1g-dev
-
-RUN git clone https://github.com/bitthunder-toolchain/btdk.git
+RUN apt-get install -y python3 build-essential texinfo bison flex libgmp-dev libmpfr-dev libmpc-dev libncurses5-dev zlib1g-dev git
 
 
